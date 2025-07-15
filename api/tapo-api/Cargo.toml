@@ -1,0 +1,10 @@
+[package]
+name = "tapo-api"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+async-std = "1.13.1"
+num = "0.4.3"
+tapo = "0.8"
+tokio = { version = "1.46.1", features = ["rt", "rt-multi-thread", "macros"] }
