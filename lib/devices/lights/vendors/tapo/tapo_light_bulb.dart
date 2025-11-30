@@ -1,5 +1,9 @@
+/*
 import 'dart:convert';
 import 'dart:io';
+import 'dart:ui';
+
+import '../../light_bulb.dart';
 
 class TapoClient {
   final String username;
@@ -35,64 +39,47 @@ class TapoClient {
   }
 }
 
-class LightState {
-  final bool isOn;
-  final int brightness;
-  final int color;
-  final bool isError;
-
-  LightState({
-    required this.isOn,
-    required this.brightness,
-    required this.color,
-    required this.isError,
-  });
-
-  static LightState fromMap(Map<String, dynamic> jsonMap) {
-    return LightState(
-      isOn: jsonMap["enabled"],
-      brightness: jsonMap["brightness"],
-      color: jsonMap["color"],
-      isError: false,
-    );
-  }
-
-  static LightState error() {
-    return LightState(isOn: false, brightness: 0, color: 0, isError: true);
-  }
-}
-
-class LightBulb {
-  final String ip;
-  final String name;
+class TapoLight extends LightBulb {
   final TapoClient client;
 
-  LightBulb({required this.ip, required this.name, required this.client});
+  TapoLight({
+    required this.client,
+    required super.ip,
+    required super.name,
+    required super.homeId,
+    required super.deviceType,
+    required super.id,
+    required super.icon,
+  });
 
-  Future<LightState> on() async {
-    final result = await client.sendCommand([ip, "on"]);
+  // @override
+  // Future<LightState> setColorTemperature(double whiteTemperature) async {
+  //   // will be clamped between 2500 and 6500
+  //   final result = await client.sendCommand([
+  //     ip,
+  //     "temperature",
+  //     whiteTemperature.toString(),
+  //   ]);
+  //   if (result["error"] != null) {
+  //     return LightState.error();
+  //   }
+  //   return LightState.fromMap(result);
+  // }
+
+  @override
+  Future<LightState> setBrightness(double brightnessPercent) async {
+    final result = await client.sendCommand([
+      ip,
+      "brightness",
+      brightnessPercent.toString(),
+    ]);
     if (result["error"] != null) {
       return LightState.error();
     }
     return LightState.fromMap(result);
   }
 
-  Future<LightState> off() async {
-    final result = await client.sendCommand([ip, "off"]);
-    if (result["error"] != null) {
-      return LightState.error();
-    }
-    return LightState.fromMap(result);
-  }
-
-  Future<LightState> toggle() async {
-    final result = await client.sendCommand([ip, "toggle"]);
-    if (result["error"] != null) {
-      return LightState.error();
-    }
-    return LightState.fromMap(result);
-  }
-
+  @override
   Future<LightState> state() async {
     final result = await client.sendCommand([ip, "state"]);
     if (result["error"] != null) {
@@ -101,28 +88,40 @@ class LightBulb {
     return LightState.fromMap(result);
   }
 
-  Future<LightState> setBrightness(int brightness) async {
-    final result = await client.sendCommand([
-      ip,
-      "brightness",
-      brightness.toString(),
-    ]);
+  @override
+  Future<LightState> toggle() async {
+    final result = await client.sendCommand([ip, "toggle"]);
     if (result["error"] != null) {
       return LightState.error();
     }
     return LightState.fromMap(result);
   }
 
-  Future<LightState> setColorTemperature(int whiteTemperature) async {
-    // will be clamped between 2500 and 6500
-    final result = await client.sendCommand([
-      ip,
-      "temperature",
-      whiteTemperature.toString(),
-    ]);
+  @override
+  Future<LightState> off() async {
+    final result = await client.sendCommand([ip, "off"]);
     if (result["error"] != null) {
       return LightState.error();
     }
     return LightState.fromMap(result);
   }
+
+  @override
+  Future<LightState> on() async {
+    final result = await client.sendCommand([ip, "on"]);
+    if (result["error"] != null) {
+      return LightState.error();
+    }
+    return LightState.fromMap(result);
+  }
+
+  @override
+  Future<LightState> setColor(Color rgbColor) {
+    // TODO: implement setColor
+    throw UnimplementedError();
+  }
+
+  @override
+  String get type => "tapo";
 }
+*/
