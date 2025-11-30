@@ -12,4 +12,3 @@ dependencies:
   crypto: ^3.0.7
   vector_math: ^2.2.0
   http: ^1.6.0
-  path_provider: ^2.1.5
